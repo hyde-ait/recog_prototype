@@ -52,7 +52,6 @@ class VideoTransformTrack(MediaStreamTrack):
             faceCascade = cv2.CascadeClassifier(
                 './cascades/haarcascade_frontalface_default.xml')
             img = frame.to_ndarray(format="bgr24")
-            img = cv2.flip(img, 1)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             faces = faceCascade.detectMultiScale(
                 gray,
@@ -61,9 +60,7 @@ class VideoTransformTrack(MediaStreamTrack):
                 minSize=(20, 20)
             )
             for (x, y, w, h) in faces:
-                cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-                roi_gray = gray[y:y+h, x:x+w]
-                roi_color = img[y:y+h, x:x+w]
+                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
             new_frame = VideoFrame.from_ndarray(img, format="bgr24")
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base

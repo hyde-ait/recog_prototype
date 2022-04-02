@@ -3,14 +3,16 @@ import asyncio
 import json
 import logging
 import os
-import ssl
+
 import uuid
-import uvicorn
+
 
 from aiortc import RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder, MediaRelay
 
 from fastapi import FastAPI, Request, Response
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from videoProcessor import VideoTransformTrack
 
@@ -21,6 +23,13 @@ pcs = set()
 relay = MediaRelay()
 
 app = FastAPI()
+app.mount(
+    "/static",
+    StaticFiles(directory=ROOT+"/static"),
+    name="static",
+)
+
+templates = Jinja2Templates(directory="templates")
 
 parser = argparse.ArgumentParser(
     description="WebRTC OpenCV Face Detection"
@@ -48,14 +57,9 @@ async def on_shutdown():
 
 @app.get("/")
 async def root(request: Request):
-    content = open(os.path.join(ROOT, "index.html"), "r").read()
-    return Response(content=content, media_type="text/html")
-
-
-@app.get("/client.js")
-async def javascript(request: Request):
-    content = open(os.path.join(ROOT, "client.js"), "r").read()
-    return Response(content=content, media_type="application/javascript")
+    return templates.TemplateResponse(
+        "index.html", {"request": request}
+    )
 
 
 @app.post("/offer")
@@ -74,7 +78,7 @@ async def offer(request: Request):
     log_info("Created for %s", request.client)
 
     # prepare local media
-    player = MediaPlayer(os.path.join(ROOT, "demo-instruct.wav"))
+
     if args.record_to:
         recorder = MediaRecorder(args.record_to)
     else:
@@ -98,10 +102,7 @@ async def offer(request: Request):
     def on_track(track):
         log_info("Track %s received", track.kind)
 
-        if track.kind == "audio":
-            pc.addTrack(player.audio)
-            recorder.addTrack(track)
-        elif track.kind == "video":
+        if track.kind == "video":
             pc.addTrack(
                 VideoTransformTrack(
                     relay.subscribe(track), transform=params["video_transform"]
