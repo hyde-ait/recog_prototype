@@ -62,6 +62,12 @@ async def root(request: Request):
     )
 
 
+@app.get("/static/client.js")
+async def javascript(request: Request):
+    content = open(os.path.join(ROOT, "/static/client.js"), "r").read()
+    return Response(content=content, media_type="application/javascript")
+
+
 @app.post("/offer")
 async def offer(request: Request):
     params = await request.json()
