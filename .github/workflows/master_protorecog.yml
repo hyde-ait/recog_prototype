@@ -33,6 +33,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # install uvloop (the dev environement is windows so it cannot be installed there)
       - name: install uvloop
         run: pip install uvloop
 
