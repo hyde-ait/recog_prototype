@@ -144,5 +144,5 @@ if __name__ == "__main__":
         ssl_context = None
     print(ssl_context)
 
-    uvicorn.run('server:app', port=args.port,
+    uvicorn.run('server:app', port=80,
                 host=args.host, reload=True)
