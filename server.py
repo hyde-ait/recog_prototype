@@ -39,7 +39,7 @@ args, unknown = parser.parse_known_args()
 
 
 @app.on_event("shutdown")
-async def on_shutdown(app):
+async def on_shutdown():
     # close peer connections
     coros = [pc.close() for pc in pcs]
     await asyncio.gather(*coros)
@@ -129,20 +129,3 @@ async def offer(request: Request):
         ),
         media_type="application/json",
     )
-
-if __name__ == "__main__":
-    print(f"{args=}")
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    if args.cert_file:
-        ssl_context = ssl.SSLContext()
-        ssl_context.load_cert_chain(args.cert_file, args.key_file)
-    else:
-        ssl_context = None
-    print(ssl_context)
-
-    uvicorn.run('server:app', port=80,
-                host=args.host, reload=True)

@@ -29,8 +29,12 @@ jobs:
       
       - name: Install and Update packages
         run: sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
+
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: install uvloop
+        run: pip install uvloop
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       
