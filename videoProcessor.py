@@ -8,7 +8,7 @@ class VideoTransformTrack(MediaStreamTrack):
     """
     A video stream track that transforms frames from an another track.
     """
-
+    start_frame_number = 50
     kind = "video"
 
     def __init__(self, track, transform):
