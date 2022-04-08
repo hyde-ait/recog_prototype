@@ -44,7 +44,6 @@ parser.add_argument(
 )
 parser.add_argument("--record-to", help="Write received media to a file."),
 parser.add_argument("--verbose", "-v", action="count")
-args, unknown = parser.parse_known_args()
 
 
 @app.on_event("shutdown")
@@ -77,13 +76,6 @@ async def offer(request: Request):
 
     log_info("Created for %s", request.client)
 
-    # prepare local media
-
-    if args.record_to:
-        recorder = MediaRecorder(args.record_to)
-    else:
-        recorder = MediaBlackhole()
-
     @pc.on("datachannel")
     def on_datachannel(channel):
         @channel.on("message")
@@ -108,17 +100,13 @@ async def offer(request: Request):
                     relay.subscribe(track), transform=params["video_transform"]
                 )
             )
-            if args.record_to:
-                recorder.addTrack(relay.subscribe(track))
 
         @track.on("ended")
         async def on_ended():
             log_info("Track %s ended", track.kind)
-            await recorder.stop()
 
     # handle offer
     await pc.setRemoteDescription(offer)
-    await recorder.start()
 
     # send answer
     answer = await pc.createAnswer()

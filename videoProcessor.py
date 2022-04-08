@@ -15,6 +15,8 @@ class VideoTransformTrack(MediaStreamTrack):
         super().__init__()  # don't forget this!
         self.track = track
         self.transform = transform
+        self.faceCascade = cv2.CascadeClassifier(
+            './cascades/haarcascade_frontalface_default.xml')
 
     async def recv(self):
         frame = await self.track.recv()
@@ -48,12 +50,11 @@ class VideoTransformTrack(MediaStreamTrack):
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
+
         elif self.transform == "face":
-            faceCascade = cv2.CascadeClassifier(
-                './cascades/haarcascade_frontalface_default.xml')
             img = frame.to_ndarray(format="bgr24")
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = faceCascade.detectMultiScale(
+            faces = self.faceCascade.detectMultiScale(
                 gray,
                 scaleFactor=1.2,
                 minNeighbors=5,
@@ -65,6 +66,7 @@ class VideoTransformTrack(MediaStreamTrack):
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
+
         elif self.transform == "edges":
             # perform edge detection
             img = frame.to_ndarray(format="bgr24")
@@ -75,6 +77,7 @@ class VideoTransformTrack(MediaStreamTrack):
             new_frame.pts = frame.pts
             new_frame.time_base = frame.time_base
             return new_frame
+
         elif self.transform == "rotate":
             # rotate image
             img = frame.to_ndarray(format="bgr24")
