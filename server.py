@@ -1,4 +1,3 @@
-import argparse
 import asyncio
 import json
 import logging
@@ -6,9 +5,8 @@ import os
 
 import uuid
 
-
 from aiortc import RTCPeerConnection, RTCSessionDescription
-from aiortc.contrib.media import MediaBlackhole, MediaPlayer, MediaRecorder, MediaRelay
+from aiortc.contrib.media import MediaRelay
 
 from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
@@ -30,20 +28,6 @@ app.mount(
 )
 
 templates = Jinja2Templates(directory="templates")
-
-parser = argparse.ArgumentParser(
-    description="WebRTC OpenCV Face Detection"
-)
-parser.add_argument("--cert-file", help="SSL certificate file (for HTTPS)")
-parser.add_argument("--key-file", help="SSL key file (for HTTPS)")
-parser.add_argument(
-    "--host", default="0.0.0.0", help="Host for HTTP server (default: 0.0.0.0)"
-)
-parser.add_argument(
-    "--port", type=int, default=8080, help="Port for HTTP server (default: 8080)"
-)
-parser.add_argument("--record-to", help="Write received media to a file."),
-parser.add_argument("--verbose", "-v", action="count")
 
 
 @app.on_event("shutdown")

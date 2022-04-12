@@ -2,8 +2,11 @@
 var dataChannelLog = document.getElementById("data-channel"),
   iceConnectionLog = document.getElementById("ice-connection-state"),
   iceGatheringLog = document.getElementById("ice-gathering-state"),
-  signalingLog = document.getElementById("signaling-state");
-
+  signalingLog = document.getElementById("signaling-state"),
+  framerate = document.getElementById("framerate");
+vidHeight = document.getElementById("height");
+vidWidth = document.getElementById("width");
+console.log("javascript enabled");
 // peer connection
 var pc = null;
 
@@ -50,9 +53,19 @@ function createPeerConnection() {
   );
   signalingLog.textContent = pc.signalingState;
 
-  // connect audio / video
+  // connect video
   pc.addEventListener("track", function (evt) {
+    console.log("listening to track...");
+    document.getElementById("loader").style.display = "none";
     document.getElementById("video").srcObject = evt.streams[0];
+    setInterval(() => {
+      framerate.textContent =
+        "FPS = " + evt.streams[0].getVideoTracks()[0].getSettings().frameRate;
+      height.textContent =
+        "Height = " + evt.streams[0].getVideoTracks()[0].getSettings().height;
+      width.textContent =
+        "Width = " + evt.streams[0].getVideoTracks()[0].getSettings().width;
+    }, 1000);
   });
 
   return pc;
@@ -146,7 +159,7 @@ function start() {
       constraints.video = true;
     }
   }
-
+  console.log("before get user media");
   if (constraints.video) {
     if (constraints.video) {
       document.getElementById("media").style.display = "block";
@@ -165,7 +178,7 @@ function start() {
   } else {
     negotiate();
   }
-
+  document.getElementById("loader").style.display = "inline-block";
   document.getElementById("stop").style.display = "inline-block";
 }
 
@@ -195,8 +208,8 @@ function stop() {
   setTimeout(function () {
     pc.close();
   }, 500);
-
   document.getElementById("start").style.display = "inline-block";
+  document.getElementById("media").style.display = "none";
 }
 
 function sdpFilterCodec(kind, codec, realSdp) {
