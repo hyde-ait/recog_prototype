@@ -1,18 +1,13 @@
 // get DOM elements
-var dataChannelLog = document.getElementById("data-channel"),
-  iceConnectionLog = document.getElementById("ice-connection-state"),
+var iceConnectionLog = document.getElementById("ice-connection-state"),
   iceGatheringLog = document.getElementById("ice-gathering-state"),
   signalingLog = document.getElementById("signaling-state"),
-  framerate = document.getElementById("framerate");
-vidHeight = document.getElementById("height");
-vidWidth = document.getElementById("width");
-console.log("javascript enabled");
+  framerate = document.getElementById("framerate"),
+  vidHeight = document.getElementById("height"),
+  vidWidth = document.getElementById("width");
+
 // peer connection
 var pc = null;
-
-// data channel
-var dc = null,
-  dcInterval = null;
 
 function createPeerConnection() {
   var config = {
@@ -58,7 +53,9 @@ function createPeerConnection() {
     console.log("listening to track...");
     document.getElementById("loader").style.display = "none";
     document.getElementById("video").srcObject = evt.streams[0];
+
     setInterval(() => {
+      // Show fps
       framerate.textContent =
         "FPS = " + evt.streams[0].getVideoTracks()[0].getSettings().frameRate;
       height.textContent =
@@ -185,11 +182,6 @@ function start() {
 function stop() {
   document.getElementById("stop").style.display = "none";
 
-  // close data channel
-  if (dc) {
-    dc.close();
-  }
-
   // close transceivers
   if (pc.getTransceivers) {
     pc.getTransceivers().forEach(function (transceiver) {
@@ -212,6 +204,7 @@ function stop() {
   document.getElementById("media").style.display = "none";
 }
 
+// Fonction pour filtrer codec dans SDP
 function sdpFilterCodec(kind, codec, realSdp) {
   var allowed = [];
   var rtxRegex = new RegExp("a=fmtp:(\\d+) apt=(\\d+)\r$");
