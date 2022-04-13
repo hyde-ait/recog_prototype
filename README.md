@@ -1,20 +1,35 @@
 # recog_prototype
 
-Realtim face detection FastAPI app using OpenCV and streaming via WebRTC (using aiortc).
+Video streaming FastAPI app using WebRTC (using [aiortc](https://github.com/aiortc/aiortc)) and openCV for realtime video processing.
 
-Converted the code in https://github.com/aiortc/aiortc/tree/main/examples/server into a FastAPI app and added face detection functionality.
+Implemented the code in https://github.com/aiortc/aiortc/tree/main/examples/server into a FastAPI app and added face detection option.
+
+STUN servers are not needed in local networks.
 
 ## Requirements
 
 Python 3.9+
 
-## Startup
+Webcam
 
-git clone https://github.com/RumbleFiend/recog_prototype.git
+## Dev server startup
 
-cd recog_prototype
+Using a python virtual environment like virtualenv or pipenv is recommended to avoid package conflicts
 
-pip install -r requirements.txt
+- pip install virtualenv
 
-uvicorn server:app --reload
+- git clone https://github.com/RumbleFiend/recog_prototype.git
 
+- cd recog_prototype
+
+- virtualenv venv
+
+- venv/Scripts/Activate.ps1
+ 
+- pip install -r requirements.txt
+
+- uvicorn server:app --reload
+
+## App preview
+
+https://recog-prototype.herokuapp.com/
