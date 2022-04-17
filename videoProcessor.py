@@ -1,4 +1,6 @@
 import cv2
+import cvlib as cv
+from cvlib.object_detection import draw_bbox
 
 from aiortc import MediaStreamTrack
 from av import VideoFrame
@@ -45,11 +47,12 @@ class VideoTransformTrack(MediaStreamTrack):
             # combine color and edges
             img = cv2.bitwise_and(img_color, img_edges)
 
-            # rebuild a VideoFrame, preserving timing information
-            new_frame = VideoFrame.from_ndarray(img, format="bgr24")
-            new_frame.pts = frame.pts
-            new_frame.time_base = frame.time_base
-            return new_frame
+        elif self.transform == "object":
+            old_img = frame.to_ndarray(format="bgr24")
+            # Perform the object detection
+            bbox, label, conf = cv.detect_common_objects(
+                old_img, confidence=0.25, model='yolov3-tiny', enable_gpu=False)
+            img = draw_bbox(old_img, bbox, label, conf)
 
         elif self.transform == "face":
             img = frame.to_ndarray(format="bgr24")
@@ -62,21 +65,11 @@ class VideoTransformTrack(MediaStreamTrack):
             )
             for (x, y, w, h) in faces:
                 cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            new_frame = VideoFrame.from_ndarray(img, format="bgr24")
-            new_frame.pts = frame.pts
-            new_frame.time_base = frame.time_base
-            return new_frame
 
         elif self.transform == "edges":
             # perform edge detection
             img = frame.to_ndarray(format="bgr24")
             img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
-
-            # rebuild a VideoFrame, preserving timing information
-            new_frame = VideoFrame.from_ndarray(img, format="bgr24")
-            new_frame.pts = frame.pts
-            new_frame.time_base = frame.time_base
-            return new_frame
 
         elif self.transform == "rotate":
             # rotate image
@@ -86,10 +79,12 @@ class VideoTransformTrack(MediaStreamTrack):
                 (cols / 2, rows / 2), frame.time * 45, 1)
             img = cv2.warpAffine(img, M, (cols, rows))
 
-            # rebuild a VideoFrame, preserving timing information
-            new_frame = VideoFrame.from_ndarray(img, format="bgr24")
-            new_frame.pts = frame.pts
-            new_frame.time_base = frame.time_base
-            return new_frame
         else:
+            # No transformation at all
             return frame
+
+        # rebuild a VideoFrame, preserving timing information
+        new_frame = VideoFrame.from_ndarray(img, format="bgr24")
+        new_frame.pts = frame.pts
+        new_frame.time_base = frame.time_base
+        return new_frame

@@ -31,6 +31,7 @@
       <select id="video-transform">
         <option value="none" selected>No transform</option>
         <option value="face">Face Detection</option>
+        <option value="object">Object Detection (with cvlib)</option>
         <option value="edges">Edge detection</option>
         <option value="cartoon">Cartoon effect</option>
         <option value="rotate">Rotate</option>
@@ -73,7 +74,7 @@
     <pre id="answer-sdp"></pre>
 
     <script
-      src="{{ url_for('static', path='/js/client.js') }}"
+      src="{{ url_for('static', path='/js/client.js?v1') }}"
       type="text/javascript"
     ></script>
   </body>
