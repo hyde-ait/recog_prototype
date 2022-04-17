@@ -1,4 +1,7 @@
 import cv2
+
+import numpy as np
+
 import cvlib as cv
 from cvlib.object_detection import draw_bbox
 
@@ -23,7 +26,57 @@ class VideoTransformTrack(MediaStreamTrack):
     async def recv(self):
         frame = await self.track.recv()
 
-        if self.transform == "cartoon":
+        if self.transform == "object":
+            old_img = frame.to_ndarray(format="bgr24")
+            # Perform the object detection
+            bbox, label, conf = cv.detect_common_objects(
+                old_img, confidence=0.25, model='yolov3-tiny', enable_gpu=False)
+            img = draw_bbox(old_img, bbox, label, conf)
+
+        elif self.transform == "face":
+            # Detect faces with Haarcascade
+            img = frame.to_ndarray(format="bgr24")
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = self.faceCascade.detectMultiScale(
+                gray,
+                scaleFactor=1.2,
+                minNeighbors=5,
+                minSize=(20, 20)
+            )
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+        elif self.transform == "facecv":
+            img = frame.to_ndarray(format="bgr24")
+            # apply face detection
+            faces, confidences = cv.detect_face(img)
+            # loop through detected faces
+            for idx, f in enumerate(faces):
+                (startX, startY) = f[0], f[1]
+                (endX, endY) = f[2], f[3]
+                # draw rectangle over face
+                cv2.rectangle(img, (startX, startY),
+                              (endX, endY), (0, 255, 0), 2)
+                text = "{:.2f}%".format(confidences[idx] * 100)
+                Y = startY - 10 if startY - 10 > 10 else startY + 10
+                # write confidence percentage on top of face rectangle
+                img = cv2.putText(img, text, (startX, Y), cv2.FONT_HERSHEY_SCRIPT_COMPLEX, 0.7,
+                                  (0, 255, 0), 2)
+
+        elif self.transform == "edges":
+            # perform edge detection
+            img = frame.to_ndarray(format="bgr24")
+            img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
+
+        elif self.transform == "rotate":
+            # rotate image
+            img = frame.to_ndarray(format="bgr24")
+            rows, cols, _ = img.shape
+            M = cv2.getRotationMatrix2D(
+                (cols / 2, rows / 2), frame.time * 45, 1)
+            img = cv2.warpAffine(img, M, (cols, rows))
+
+        elif self.transform == "cartoon":
             img = frame.to_ndarray(format="bgr24")
 
             # prepare color
@@ -46,38 +99,6 @@ class VideoTransformTrack(MediaStreamTrack):
 
             # combine color and edges
             img = cv2.bitwise_and(img_color, img_edges)
-
-        elif self.transform == "object":
-            old_img = frame.to_ndarray(format="bgr24")
-            # Perform the object detection
-            bbox, label, conf = cv.detect_common_objects(
-                old_img, confidence=0.25, model='yolov3-tiny', enable_gpu=False)
-            img = draw_bbox(old_img, bbox, label, conf)
-
-        elif self.transform == "face":
-            img = frame.to_ndarray(format="bgr24")
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            faces = self.faceCascade.detectMultiScale(
-                gray,
-                scaleFactor=1.2,
-                minNeighbors=5,
-                minSize=(20, 20)
-            )
-            for (x, y, w, h) in faces:
-                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-        elif self.transform == "edges":
-            # perform edge detection
-            img = frame.to_ndarray(format="bgr24")
-            img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
-
-        elif self.transform == "rotate":
-            # rotate image
-            img = frame.to_ndarray(format="bgr24")
-            rows, cols, _ = img.shape
-            M = cv2.getRotationMatrix2D(
-                (cols / 2, rows / 2), frame.time * 45, 1)
-            img = cv2.warpAffine(img, M, (cols, rows))
 
         else:
             # No transformation at all

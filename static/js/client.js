@@ -79,7 +79,7 @@ function createPeerConnection() {
         "Height = " + evt.streams[0].getVideoTracks()[0].getSettings().height;
       width.textContent =
         "Width = " + evt.streams[0].getVideoTracks()[0].getSettings().width;
-    }, 1000);
+    }, 10);
   });
 
   return pc;
