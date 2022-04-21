@@ -57,13 +57,17 @@
     <button id="stop" style="display: none" onclick="stop()">Stop</button>
 
     <!-- Photo  -->
-    <div id="photo-media" style="display: none">
-      <button id="start-camera">Start Camera</button>
-      <button id="stop-camera" style="display: none">Stop Camera</button>
+    <div id="photo-media" style="display: none"> 
       <video id="webcam" width="320" height="240" autoplay></video>
-      <button id="click-photo">Click Photo</button>
-      <canvas id="canvas" width="320" height="240"></canvas>
-      <img id="img-transform" width="320" height="240"></img>
+      <div>
+        <button id="start-camera">Start Camera</button>
+        <button id="stop-camera" style="display: none">Stop Camera</button>
+        <button id="click-photo">Capture</button>
+      </div>
+      <div>
+        <canvas id="canvas" width="320" height="240"></canvas>
+        <img id="img-transform" width="320" height="240"></img>
+      </div>
     </div>
 
     <!-- ICE STATE -->

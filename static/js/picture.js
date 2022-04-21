@@ -61,11 +61,11 @@ type.addEventListener("change", function () {
     document.getElementById("start").style.display = "none";
     document.getElementById("stop").style.display = "none";
   } else {
+    stop_button.dispatchEvent(new Event("click"));
     document.getElementById("photo-media").style.display = "none";
     document.getElementById("video-resolution").style.display = "inline";
     document.getElementById("video-codec").style.display = "inline";
     document.getElementById("stun").style.display = "inline";
     document.getElementById("start").style.display = "block";
-    document.getElementById("stop").style.display = "block";
   }
 });
