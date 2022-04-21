@@ -4,7 +4,8 @@ var iceConnectionLog = document.getElementById("ice-connection-state"),
   signalingLog = document.getElementById("signaling-state"),
   framerate = document.getElementById("framerate"),
   vidHeight = document.getElementById("height"),
-  vidWidth = document.getElementById("width");
+  vidWidth = document.getElementById("width"),
+  server = "/offer";
 
 // peer connection
 var pc = null;
@@ -117,7 +118,7 @@ function negotiate() {
       }
 
       document.getElementById("offer-sdp").textContent = offer.sdp;
-      return fetch("/offer", {
+      return fetch(server, {
         body: JSON.stringify({
           sdp: offer.sdp,
           type: offer.type,
@@ -161,7 +162,7 @@ function start() {
     video: false,
   };
 
-  if (document.getElementById("use-video").checked) {
+  if (document.getElementById("type").value == "video") {
     var resolution = document.getElementById("video-resolution").value;
     if (resolution) {
       resolution = resolution.split("x");

@@ -1,7 +1,10 @@
 import asyncio
+import io
 import json
 import logging
 import os
+
+from pprint import pprint
 
 import uuid
 
@@ -9,10 +12,12 @@ from aiortc import RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaRelay
 
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from videoProcessor import VideoTransformTrack
+from utils.videoProcessor import VideoTransformTrack
+from utils.photoProcessor import processPhoto
 
 ROOT = os.path.dirname(__file__)
 
@@ -43,6 +48,16 @@ async def root(request: Request):
     return templates.TemplateResponse(
         "index.html", {"request": request}
     )
+
+
+@app.post("/photo")
+async def photo(request: Request):
+    form = await request.form()
+    transform = list(form.keys())[0]
+    print(transform)
+    contents = await form[transform].read()
+    image: bytes = processPhoto(contents, transform)
+    return StreamingResponse(io.BytesIO(image), media_type="image/png")
 
 
 @app.post("/offer")

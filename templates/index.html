@@ -19,8 +19,11 @@
 
     <h2>Options</h2>
     <div class="option">
-      <input id="use-video" type="checkbox" checked="checked" />
-      <label for="use-video">Use video</label>
+      <label>Use</label>
+      <select id="type">
+        <option value="video" selected>Video</option>
+        <option value="photo">Photo</option>
+      </select>
       <select id="video-resolution">
         <option value="" selected>Default resolution</option>
         <option value="320x240">320x240</option>
@@ -43,7 +46,7 @@
         <option value="VP8/90000">VP8</option>
       </select>
     </div>
-    <div class="option">
+    <div class="option" id="stun">
       <input id="use-stun" type="checkbox" checked="checked" />
       <label for="use-stun"
         >Use STUN server (It's not needed in a local network)</label
@@ -52,6 +55,17 @@
 
     <button id="start" onclick="start()">Start</button>
     <button id="stop" style="display: none" onclick="stop()">Stop</button>
+
+    <!-- Photo  -->
+    <div id="photo-media" style="display: none">
+      <button id="start-camera">Start Camera</button>
+      <button id="stop-camera" style="display: none">Stop Camera</button>
+      <video id="webcam" width="320" height="240" autoplay></video>
+      <button id="click-photo">Click Photo</button>
+      <canvas id="canvas" width="320" height="240"></canvas>
+      <img id="img-transform" width="320" height="240"></img>
+    </div>
+
     <!-- ICE STATE -->
     <h2>Etat</h2>
     <p>ICE gathering state: <span id="ice-gathering-state"></span></p>
@@ -76,7 +90,11 @@
     <pre id="answer-sdp"></pre>
 
     <script
-      src="{{ url_for('static', path='/js/client.js?v2') }}"
+      src="{{ url_for('static', path='/js/client.js?v4') }}"
+      type="text/javascript"
+    ></script>
+    <script
+      src="{{ url_for('static', path='/js/picture.js?v2.1') }}"
       type="text/javascript"
     ></script>
   </body>
