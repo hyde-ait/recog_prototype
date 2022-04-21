@@ -10,7 +10,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', path='/css/style.css') }}"
+      href="{{ url_for('static', path='/css/style.css?v1') }}"
     />
     <title>Homepage</title>
   </head>
@@ -57,8 +57,10 @@
     <button id="stop" style="display: none" onclick="stop()">Stop</button>
 
     <!-- Photo  -->
-    <div id="photo-media" style="display: none"> 
-      <video id="webcam" width="320" height="240" autoplay></video>
+    <div id="photo-media" style="display: none">
+      <div>
+        <video id="webcam" width="320" height="240" autoplay></video>
+      </div>
       <div>
         <button id="start-camera">Start Camera</button>
         <button id="stop-camera" style="display: none">Stop Camera</button>

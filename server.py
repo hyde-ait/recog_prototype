@@ -3,9 +3,6 @@ import io
 import json
 import logging
 import os
-
-from pprint import pprint
-
 import uuid
 
 from aiortc import RTCPeerConnection, RTCSessionDescription

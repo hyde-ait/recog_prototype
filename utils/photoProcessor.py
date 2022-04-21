@@ -1,4 +1,3 @@
-import cvlib as cv
 import cv2
 import numpy as np
 
@@ -6,11 +5,8 @@ from utils.videoProcessor import cartoon_effect, edge_detect, face_detect, face_
 
 
 def processPhoto(image, transform):
-    binary_file = open("file.png", "wb")
-    binary_file.write(image)
-    binary_file.close()
-    img = cv2.imread("file.png")
-
+    img_np = np.frombuffer(image, dtype=np.ubyte)
+    img = cv2.imdecode(img_np, cv2.IMREAD_COLOR)
     if transform == "object":
         img = object_detect_cvlib(img)
 
@@ -32,6 +28,5 @@ def processPhoto(image, transform):
     f = "file.png"
     cv2.imwrite(f, img)
     image_bytes = cv2.imencode('.png', img)[1]
-    print(type(image_bytes))
 
     return image_bytes
