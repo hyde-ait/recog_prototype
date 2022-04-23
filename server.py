@@ -12,6 +12,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 
 from utils.videoProcessor import VideoTransformTrack
 from utils.photoProcessor import processPhoto
@@ -23,6 +24,20 @@ pcs = set()
 relay = MediaRelay()
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.mount(
     "/static",
     StaticFiles(directory=ROOT+"/static"),

@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from utils.videoProcessor import cartoon_effect, edge_detect, face_detect, face_detect_cvlib, gender_recog_cvlib, object_detect_cvlib
+from utils.imgTransform import cartoon_effect, edge_detect, face_detect, face_detect_cvlib, gender_recog_cvlib, object_detect_cvlib
 
 
 def processPhoto(image, transform):
