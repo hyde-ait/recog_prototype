@@ -10,7 +10,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', path='/css/style.css?v1') }}"
+      href="{{ url_for('static', path='/css/style.css?v4') }}"
     />
     <title>Homepage</title>
   </head>
@@ -58,17 +58,26 @@
 
     <!-- Photo  -->
     <div id="photo-media" style="display: none">
-      <div>
-        <video id="webcam" width="320" height="240" autoplay></video>
+      <div class="wrapper">
+        <fieldset class="webcam">
+          <legend>WEBCAM</legend>
+          <video id="webcam" width="320" height="240" autoplay></video>
+        </fieldset>
       </div>
       <div>
         <button id="start-camera">Start Camera</button>
         <button id="stop-camera" style="display: none">Stop Camera</button>
         <button id="click-photo">Capture</button>
       </div>
-      <div>
-        <canvas id="canvas" width="320" height="240"></canvas>
-        <img id="img-transform" width="320" height="240"></img>
+      <div class="wrapper">
+        <fieldset class="results">
+          <legend>RAW IMAGE</legend>
+          <canvas id="canvas" width="320" height="240"></canvas>
+        </fieldset>
+        <fieldset class="results">
+          <legend>TRANSFORMATION RESULT</legend>
+          <img id="img-transform" width="320" height="240"></img>
+        </fieldset>
       </div>
     </div>
 
@@ -80,7 +89,7 @@
 
     <div id="media" style="display: none">
       <h2>Video:</h2>
-      <div id="loader"></div>
+      <div id="loader"></div> 
       <pre id="framerate"></pre>
       <pre id="height"></pre>
       <pre id="width"></pre>

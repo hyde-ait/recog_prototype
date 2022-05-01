@@ -25,8 +25,6 @@ def processPhoto(image, transform):
     elif transform == "cartoon":
         img = cartoon_effect(img)
 
-    f = "file.png"
-    cv2.imwrite(f, img)
     image_bytes = cv2.imencode('.png', img)[1]
 
     return image_bytes

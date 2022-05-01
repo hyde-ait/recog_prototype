@@ -74,8 +74,10 @@ function createPeerConnection() {
 
     setInterval(() => {
       // Show fps
-      framerate.textContent =
-        "FPS = " + evt.streams[0].getVideoTracks()[0].getSettings().frameRate;
+      let fps = evt.streams[0].getVideoTracks()[0].getSettings().frameRate;
+      if (fps) {
+        framerate.textContent = "FPS = " + fps;
+      }
       height.textContent =
         "Height = " + evt.streams[0].getVideoTracks()[0].getSettings().height;
       width.textContent =
