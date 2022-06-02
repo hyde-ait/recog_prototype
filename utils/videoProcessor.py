@@ -19,7 +19,7 @@ class VideoTransformTrack(MediaStreamTrack):
     async def recv(self):
         frame = await self.track.recv()
         img = frame.to_ndarray(format="bgr24")
-
+        
         if self.transform == "object":
             img = object_detect_cvlib(img)
 

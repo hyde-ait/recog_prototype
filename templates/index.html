@@ -16,9 +16,20 @@
   </head>
   <body>
     <h1>Real Time Face Recognition PROTOTYPE.</h1>
-
-    <h2>Options</h2>
-    <div class="option">
+    <div class="upload">
+      <h2>Upload custom model</h2>
+      <div>
+        <label for="file">Keras (.h5) files</label>
+        <input type="file" accept=".h5" name="file" id="file">
+      </div>
+      <div>
+        <label for="file">Tensorflow (.pb) files</label>
+        <input type="file" accept=".pb" name="file" id="file">
+      </div>
+      <button>Upload file</button> 
+    </div>
+    <div class="option"></div>
+      <h2>Options</h2>
       <label>Use</label>
       <select id="type">
         <option value="video" selected>Realtime video</option>
@@ -111,6 +122,10 @@
     <script
       src="{{ url_for('static', path='/js/picture.js?v2.1') }}"
       type="text/javascript"
+    ></script>
+    <script
+    src="{{ url_for('static', path='/js/modelFile.js?v2.1') }}"
+    type="text/javascript"
     ></script>
   </body>
 </html>
