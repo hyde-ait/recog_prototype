@@ -1,29 +1,31 @@
-# 
+# Python base image
 FROM python:3.10-slim-buster
 
-# 
+# copy source code
 COPY . /app
 WORKDIR /app
 
-# 
+# Copy python libraries requirements
 COPY requirements.txt requirements.txt
 
-# update
+# update linux packages
 RUN apt-get update 
 
-# installer les librairies linux nécéssaires pour compiler les packages python
-RUN apt-get install -y --no-install-recommends gcc libsasl2-dev python-dev libldap2-dev libssl-dev libsnmp-dev \
+# Install additional linux packages in order to compile some python librarires 
+RUN apt-get install -y --no-install-recommends gcc libsasl2-dev python-dev \ 
+    libldap2-dev libssl-dev libsnmp-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# installer les packages python 
+# Install python libraries
 RUN pip install -r requirements.txt 
 
-#supprimer les libraries linux
+# Delete the additional linux packages since they are no longer needed for compiling 
 RUN apt-get purge -y --auto-remove gcc libsasl2-dev python-dev libldap2-dev libssl-dev libsnmp-dev
 
+# Expose port
 EXPOSE 8000
 
-# Lancer le serveur FastAPI
+# Launch the fastAPI server
 CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "server:app"]
 
 
