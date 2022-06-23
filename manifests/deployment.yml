@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "recogaks-ecf8"
+  name: "recogaks-backend"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "recogaks-ecf8"
+      app: "recogaks-backend"
   template:
     metadata:
       labels:
-        app: "recogaks-ecf8"
+        app: "recogaks-backend"
     spec:
       containers:
-        - name: "recogaks-ecf8"
+        - name: "recogaks-backend"
           image: "acrecog1.azurecr.io/recogaks"
           ports:
           - containerPort: 8000
