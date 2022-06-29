@@ -23,9 +23,9 @@ RUN pip install -r requirements.txt
 RUN apt-get purge -y --auto-remove gcc libsasl2-dev python-dev libldap2-dev libssl-dev libsnmp-dev
 
 # Expose port
-EXPOSE 8000
+EXPOSE 80
 
 # Launch the fastAPI server
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "server:app"]
+CMD ["uvicorn","server:app", "--host", "0.0.0.0","--port", "80" ]
 
 
