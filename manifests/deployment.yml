@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "akscluster-9dda"
+  name: "akscluster-backend"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "akscluster-9dda"
+      app: "akscluster-backend"
   template:
     metadata:
       labels:
-        app: "akscluster-9dda"
+        app: "akscluster-backend"
     spec:
       containers:
-        - name: "akscluster-9dda"
+        - name: "akscluster-backend"
           image: "aksregitery001.azurecr.io/akscluster"
           ports:
           - containerPort: 80
